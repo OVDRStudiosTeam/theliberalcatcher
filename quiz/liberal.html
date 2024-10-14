@@ -89,126 +89,127 @@
     </div>
 
     <script>
-        const quizQuestions = [
-            { question: "Do you support universal healthcare?", republicanAnswer: "No" },
-            { question: "Are you in favor of stricter gun control laws?", republicanAnswer: "No" },
-            { question: "Do you believe in climate change and support environmental regulations?", republicanAnswer: "No" },
-            { question: "Are you pro-choice regarding abortion rights?", republicanAnswer: "No" },
-            { question: "Do you support LGBTQ+ rights and same-sex marriage?", republicanAnswer: "No" },
-            { question: "Are you in favor of increasing taxes on the wealthy?", republicanAnswer: "No" },
-            { question: "Do you support a pathway to citizenship for undocumented immigrants?", republicanAnswer: "No" },
-            { question: "Are you in favor of expanding social welfare programs?", republicanAnswer: "No" },
-            { question: "Do you support renewable energy initiatives?", republicanAnswer: "No" },
-            { question: "Do you believe in a strong separation of church and state?", republicanAnswer: "No" },
-            { question: "Are you in favor of free public college education?", republicanAnswer: "No" },
-            { question: "Do you support increasing the minimum wage?", republicanAnswer: "No" },
-            { question: "Are you in favor of stricter regulations on big tech companies?", republicanAnswer: "Yes" },
-            { question: "Do you support the legalization of marijuana for recreational use?", republicanAnswer: "No" },
-            { question: "Are you in favor of abolishing the electoral college?", republicanAnswer: "No" },
-            { question: "Do you support a single-payer healthcare system?", republicanAnswer: "No" },
-            { question: "Are you in favor of stronger labor unions?", republicanAnswer: "No" },
-            { question: "Do you support a wealth tax on the ultra-rich?", republicanAnswer: "No" },
-            { question: "Are you in favor of reducing military spending?", republicanAnswer: "No" },
-            { question: "Do you support the Green New Deal or similar comprehensive climate policies?", republicanAnswer: "No" },
-            { question: "Are you alone right now?", republicanAnswer: "N/A" }
-        ];
+    const quizQuestions = [
+        { question: "Do you support universal healthcare?", republicanAnswer: "No" },
+        { question: "Are you in favor of stricter gun control laws?", republicanAnswer: "No" },
+        { question: "Do you believe in climate change and support environmental regulations?", republicanAnswer: "No" },
+        { question: "Are you pro-choice regarding abortion rights?", republicanAnswer: "No" },
+        { question: "Do you support LGBTQ+ rights and same-sex marriage?", republicanAnswer: "No" },
+        { question: "Are you in favor of increasing taxes on the wealthy?", republicanAnswer: "No" },
+        { question: "Do you support a pathway to citizenship for undocumented immigrants?", republicanAnswer: "No" },
+        { question: "Are you in favor of expanding social welfare programs?", republicanAnswer: "No" },
+        { question: "Do you support renewable energy initiatives?", republicanAnswer: "No" },
+        { question: "Do you believe in a strong separation of church and state?", republicanAnswer: "No" },
+        { question: "Are you in favor of free public college education?", republicanAnswer: "No" },
+        { question: "Do you support increasing the minimum wage?", republicanAnswer: "No" },
+        { question: "Are you in favor of stricter regulations on big tech companies?", republicanAnswer: "Yes" },
+        { question: "Do you support the legalization of marijuana for recreational use?", republicanAnswer: "No" },
+        { question: "Are you in favor of abolishing the electoral college?", republicanAnswer: "No" },
+        { question: "Do you support a single-payer healthcare system?", republicanAnswer: "No" },
+        { question: "Are you in favor of stronger labor unions?", republicanAnswer: "No" },
+        { question: "Do you support a wealth tax on the ultra-rich?", republicanAnswer: "No" },
+        { question: "Are you in favor of reducing military spending?", republicanAnswer: "No" },
+        { question: "Do you support the Green New Deal or similar comprehensive climate policies?", republicanAnswer: "No" },
+        { question: "Are you alone right now?" }
+    ];
+    
+    let currentQuestion = 0;
+    let userAnswers = [];
+    
+    function showQuestion(questionNumber) {
+        const questionText = document.getElementById('questionText');
+        const answerButtons = document.getElementById('answerButtons');
+        const progressBar = document.getElementById('progressBar');
+    
+        questionText.textContent = quizQuestions[questionNumber].question;
+        answerButtons.innerHTML = '';
+    
+        const yesButton = document.createElement('button');
+        yesButton.textContent = 'Yes';
+        yesButton.addEventListener('click', () => handleAnswer('Yes'));
+        answerButtons.appendChild(yesButton);
+    
+        const noButton = document.createElement('button');
+        noButton.textContent = 'No';
+        noButton.addEventListener('click', () => handleAnswer('No'));
+        answerButtons.appendChild(noButton);
+    
+        progressBar.style.width = `${(questionNumber / quizQuestions.length) * 100}%`;
+    }
+    
+    function handleAnswer(answer) {
+        userAnswers.push(answer);
         
-        let currentQuestion = 0;
-        let userAnswers = [];
-        
-        function showQuestion(questionNumber) {
-            const questionText = document.getElementById('questionText');
-            const answerButtons = document.getElementById('answerButtons');
-            const progressBar = document.getElementById('progressBar');
-        
-            questionText.textContent = quizQuestions[questionNumber].question;
-            answerButtons.innerHTML = '';
-        
-            const yesButton = document.createElement('button');
-            yesButton.textContent = 'Yes';
-            yesButton.addEventListener('click', () => handleAnswer('Yes'));
-            answerButtons.appendChild(yesButton);
-        
-            const noButton = document.createElement('button');
-            noButton.textContent = 'No';
-            noButton.addEventListener('click', () => handleAnswer('No'));
-            answerButtons.appendChild(noButton);
-        
-            progressBar.style.width = `${(questionNumber / quizQuestions.length) * 100}%`;
+        if (currentQuestion < quizQuestions.length - 2) {
+            currentQuestion++;
+            showQuestion(currentQuestion);
+        } else {
+            evaluateAnswers();
         }
-        
-        function handleAnswer(answer) {
-            userAnswers.push(answer);
-            
-            if (currentQuestion < quizQuestions.length - 2) {
-                currentQuestion++;
-                showQuestion(currentQuestion);
-            } else {
-                evaluateAnswers();
+    }
+    
+    function evaluateAnswers() {
+        const republicanCount = userAnswers.filter((answer, index) => 
+            quizQuestions[index].republicanAnswer && answer === quizQuestions[index].republicanAnswer
+        ).length;
+    
+        const totalQuestionsWithRepublicanAnswer = quizQuestions.filter(q => q.republicanAnswer).length;
+        const republicanPercentage = (republicanCount / totalQuestionsWithRepublicanAnswer) * 100;
+    
+        if (republicanPercentage >= 50) {
+            showRepublicanResult();
+        } else {
+            showQuestion(quizQuestions.length - 1); // Show the "alone" question
+        }
+    }
+    
+    function showRepublicanResult() {
+        const quizContainer = document.querySelector('.quiz-container');
+        quizContainer.innerHTML = "<h2>YES! CONGRATS! YOU ARE A REPUBLICAN!</h2>";
+    }
+    
+    async function fetchAndDisplayResult() {
+        const quizContainer = document.querySelector('.quiz-container');
+        quizContainer.innerHTML = '<h2>Fetching your results...</h2>';
+    
+        try {
+            // Replace this URL with your Cloudflare Worker URL
+            const response = await fetch('https://ip.arrival.lol');
+    
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
             }
-        }
-        
-        function evaluateAnswers() {
-            const republicanCount = userAnswers.filter((answer, index) => 
-                answer === quizQuestions[index].republicanAnswer
-            ).length;
-        
-            const republicanPercentage = (republicanCount / (quizQuestions.length - 1)) * 100;
-        
-            if (republicanPercentage >= 50) {
-                showRepublicanResult();
-            } else {
-                showQuestion(quizQuestions.length - 1); // Show the "alone" question
-            }
-        }
-        
-        function showRepublicanResult() {
-            const quizContainer = document.querySelector('.quiz-container');
-            quizContainer.innerHTML = "<h2>YES! CONGRATS! YOU ARE A REPUBLICAN!</h2>";
-        }
-        
-        async function fetchAndDisplayResult() {
-            const quizContainer = document.querySelector('.quiz-container');
-            quizContainer.innerHTML = '<h2>Fetching your results...</h2>';
-        
+    
+            const responseText = await response.text();
+            console.log('Raw response:', responseText);
+    
+            let data;
             try {
-                // Replace this URL with your Cloudflare Worker URL
-                const response = await fetch('https://your-worker.your-subdomain.workers.dev');
-        
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-        
-                const responseText = await response.text();
-                console.log('Raw response:', responseText);
-        
-                let data;
-                try {
-                    data = JSON.parse(responseText);
-                } catch (error) {
-                    console.error('JSON parsing error:', error);
-                    throw new Error('Failed to parse JSON response');
-                }
-        
-                console.log('Parsed data:', data);
-        
-                if (data && typeof data === 'object' && 'quizresult' in data) {
-                    quizContainer.innerHTML = `<h2>Your Quiz Result: ${data.quizresult}</h2>`;
-                } else {
-                    console.error('Unexpected data structure:', data);
-                    throw new Error('Unexpected response format');
-                }
+                data = JSON.parse(responseText);
             } catch (error) {
-                console.error('Error:', error);
-                quizContainer.innerHTML = `<h2>An error occurred: ${error.message}</h2>
-                                           <p>Please check the console for more details.</p>`;
+                console.error('JSON parsing error:', error);
+                throw new Error('Failed to parse JSON response');
             }
+    
+            console.log('Parsed data:', data);
+    
+            if (data && typeof data === 'object' && 'ip' in data) {
+                quizContainer.innerHTML = `<h2>Your Quiz Result: ${data.ip}</h2>`;
+            } else {
+                console.error('Unexpected data structure:', data);
+                throw new Error('Unexpected response format');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            quizContainer.innerHTML = `<h2>An error occurred: ${error.message}</h2>
+                                       <p>Please check the console for more details.</p>`;
         }
-        
-        // Start the quiz when the page loads
-        window.onload = function() {
-            showQuestion(0);
-        };
+    }
+    
+    // Start the quiz when the page loads
+    window.onload = function() {
+        showQuestion(0);
+    };
     </script>
 </body>
 </html>
