@@ -182,7 +182,7 @@
             const buildTime = '{{BUILD_TIME}}';
             if (buildTime && buildTime !== '{{BUILD_TIME}}') {
                 const date = new Date(buildTime);
-                lastUpdatedElement.textContent = `Last updated: ${date.toLocaleString()}`;
+                lastUpdatedElement.textContent = `Last updated: ${date.toLocaleString()} PDT`;
             } else {
                 lastUpdatedElement.textContent = 'Last update time unavailable';
             }
