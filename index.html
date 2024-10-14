@@ -173,6 +173,7 @@
             // Attach event listeners to buttons
             document.getElementById('yesButton').addEventListener('click', goToQuiz);
             document.getElementById('noButton').addEventListener('click', hideQuizPopup);
+            displayLastUpdateTime();
         });
 
         function displayLastUpdateTime() {
@@ -185,14 +186,6 @@
                 lastUpdatedElement.textContent = 'Last update time unavailable';
             }
         }
-
-        // Wait for the DOM to be fully loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            // ... (previous DOMContentLoaded content remains unchanged) ...
-
-            // Display last update time
-            displayLastUpdateTime();
-
     </script>
 </head>
 <body>
