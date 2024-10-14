@@ -57,14 +57,95 @@
             user-select: none; /* Prevent selection */
         }
 
-        /* Hidden video to autoplay audio */
-        .hidden-video {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            opacity: 0;
+        /* Volume control styles */
+        .volume-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            opacity: 0.6; /* Slightly transparent */
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .volume-control:hover {
+            opacity: 1;
+        }
+
+        .volume-slider {
+            display: none;
+            width: 100px;
+            height: 5px;
+            background-color: #888;
+            margin-right: 10px;
+        }
+
+        .volume-control:hover .volume-slider {
+            display: block;
+        }
+
+        .volume-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .volume-icon svg {
+            width: 100%;
+            height: 100%;
         }
     </style>
+
+    <script>
+        window.onload = function() {
+            // Randomly choose between logo.gif and logo2.gif
+            var logo = document.querySelector('.logo');
+            var logos = ['/logo.gif', '/logo2.gif'];
+            var randomLogo = logos[Math.floor(Math.random() * logos.length)];
+            logo.src = randomLogo;
+
+            // Audio setup
+            var audio = new Audio('/thelibscatchertheme.mp3');
+            var volumeControl = document.querySelector('.volume-icon');
+            var volumeSlider = document.querySelector('.volume-slider input[type="range"]');
+
+            // Load saved volume from localStorage
+            var savedVolume = localStorage.getItem('audioVolume');
+            if (savedVolume !== null) {
+                audio.volume = savedVolume;
+                volumeSlider.value = savedVolume * 100;
+            } else {
+                audio.volume = 0.5; // Default volume
+                volumeSlider.value = 50;
+            }
+
+            // Play the audio when the page loads
+            audio.play();
+
+            // Mute/unmute the audio when the volume icon is clicked
+            volumeControl.addEventListener('click', function() {
+                var volumeIcon = volumeControl.querySelector('svg');
+                if (audio.muted) {
+                    audio.muted = false;
+                    volumeIcon.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white">
+                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03zm2.5 0c0 2.87-1.92 5.29-4.5 6.08v2.02c4-0.91 7-4.49 7-8.1 0-3.61-3-7.19-7-8.1v2.02c2.58 0.79 4.5 3.21 4.5 6.08z"/>
+                        </svg>`;
+                } else {
+                    audio.muted = true;
+                    volumeIcon.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white">
+                            <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03zm-2.5-8v2.02C15.58 7.79 17.5 10.21 17.5 13c0 2.87-1.92 5.29-4.5 6.08v2.02c4-.91 7-4.49 7-8.1 0-3.61-3-7.19-7-8.1zM7 4l-4 4v8l4 4h5V4H7z"/>
+                        </svg>`;
+                }
+            });
+
+            // Adjust volume using the slider
+            volumeSlider.addEventListener('input', function() {
+                audio.volume = volumeSlider.value / 100;
+                localStorage.setItem('audioVolume', audio.volume); // Save volume to localStorage
+            });
+        };
+    </script>
 </head>
 <body>
     <!-- Dynamic logo with class logo -->
@@ -72,12 +153,6 @@
 
     <!-- Centered Protected Image (catcher.png) -->
     <div class="protected-image"></div>
-
-    <!-- Autoplaying hidden MP4 video -->
-    <video class="hidden-video" autoplay loop muted playsinline>
-        <source src="/thelibscatchertheme.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
 
     <!-- Volume control UI -->
     <div class="volume-control">
