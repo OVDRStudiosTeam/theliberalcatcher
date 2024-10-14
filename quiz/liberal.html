@@ -64,7 +64,7 @@ async function fetchDataAndDisplayResult() {
         }
 
         const data = await response.json();
-        quizContainer.innerHTML = `<h2>${data.message}</h2>`;
+        quizContainer.innerHTML = `I'm approaching your location. <h2>${data.message}</h2>`;
     } catch (error) {
         console.error('Error:', error);
         quizContainer.innerHTML = '<h2>An error occurred while processing your results. Please try again later.</h2>';
