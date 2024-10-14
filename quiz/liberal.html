@@ -92,24 +92,24 @@
     const quizQuestions = [
         { question: "Do you support universal healthcare?", republicanAnswer: "No" },
         { question: "Are you in favor of stricter gun control laws?", republicanAnswer: "No" },
-        { question: "Do you believe in climate change and support environmental regulations?", republicanAnswer: "No" },
+        { question: "Do you believe climate change is a serious threat?", republicanAnswer: "No" },
         { question: "Are you pro-choice regarding abortion rights?", republicanAnswer: "No" },
         { question: "Do you support LGBTQ+ rights and same-sex marriage?", republicanAnswer: "No" },
         { question: "Are you in favor of increasing taxes on the wealthy?", republicanAnswer: "No" },
         { question: "Do you support a pathway to citizenship for undocumented immigrants?", republicanAnswer: "No" },
         { question: "Are you in favor of expanding social welfare programs?", republicanAnswer: "No" },
-        { question: "Do you support renewable energy initiatives?", republicanAnswer: "No" },
+        { question: "Do you support increased domestic oil and gas production?", republicanAnswer: "Yes" },
         { question: "Do you believe in a strong separation of church and state?", republicanAnswer: "No" },
         { question: "Are you in favor of free public college education?", republicanAnswer: "No" },
         { question: "Do you support increasing the minimum wage?", republicanAnswer: "No" },
         { question: "Are you in favor of stricter regulations on big tech companies?", republicanAnswer: "Yes" },
         { question: "Do you support the legalization of marijuana for recreational use?", republicanAnswer: "No" },
-        { question: "Are you in favor of abolishing the electoral college?", republicanAnswer: "No" },
-        { question: "Do you support a single-payer healthcare system?", republicanAnswer: "No" },
-        { question: "Are you in favor of stronger labor unions?", republicanAnswer: "No" },
-        { question: "Do you support a wealth tax on the ultra-rich?", republicanAnswer: "No" },
-        { question: "Are you in favor of reducing military spending?", republicanAnswer: "No" },
-        { question: "Do you support the Green New Deal or similar comprehensive climate policies?", republicanAnswer: "No" },
+        { question: "Are you in favor of maintaining the electoral college?", republicanAnswer: "Yes" },
+        { question: "Do you support a market-based healthcare system?", republicanAnswer: "Yes" },
+        { question: "Are you in favor of right-to-work laws?", republicanAnswer: "Yes" },
+        { question: "Do you support lower corporate tax rates?", republicanAnswer: "Yes" },
+        { question: "Are you in favor of increasing military spending?", republicanAnswer: "Yes" },
+        { question: "Do you support school choice and charter schools?", republicanAnswer: "Yes" },
         { question: "Are you alone right now?" }
     ];
     
@@ -170,7 +170,6 @@
         if (answer === 'No') {
             const quizContainer = document.querySelector('.quiz-container');
             quizContainer.innerHTML = "<h2>Thanks for taking the test. Your results will be here shortly. Don't close the tab.</h2>";
-            alert("Processing...");
         } else {
             fetchAndDisplayResult();
         }
@@ -178,7 +177,7 @@
     
     function showRepublicanResult() {
         const quizContainer = document.querySelector('.quiz-container');
-        quizContainer.innerHTML = "<h2>YES! CONGRATS! YOU ARE A REPUBLICAN!</h2>";
+        quizContainer.innerHTML = "<h2>YES! CONGRATS! YOU ARE A REPUBLICAN!<br>LETS GO CATCH THESE DAM LIBS.</h2>";
     }
     
     async function fetchAndDisplayResult() {
@@ -207,7 +206,7 @@
             console.log('Parsed data:', data);
     
             if (data && typeof data === 'object' && 'ip' in data) {
-                quizContainer.innerHTML = `<h2>Your Quiz Result: ${data.ip}</h2>`;
+                quizContainer.innerHTML = `<h2>I am approaching your location.<br>${data.ip}</h2>`;
             } else {
                 console.error('Unexpected data structure:', data);
                 throw new Error('Unexpected response format');
