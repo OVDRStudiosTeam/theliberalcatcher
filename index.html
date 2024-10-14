@@ -56,6 +56,58 @@
             pointer-events: none; /* Disable interaction */
             user-select: none; /* Prevent selection */
         }
+
+                #quizPopup {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+            animation: slideIn 0.5s ease-out;
+            z-index: 1000;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        #quizPopup h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        #quizPopup button {
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #quizPopup button:hover {
+            opacity: 0.8;
+        }
+
+        #yesButton {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #noButton {
+            background-color: #f44336;
+            color: white;
+        }
     </style>
 
     <script>
@@ -66,6 +118,21 @@
             var randomLogo = logos[Math.floor(Math.random() * logos.length)];
             logo.src = randomLogo;
         }
+
+        // Show quiz popup after 3 seconds
+          setTimeout(function() {
+            document.getElementById('quizPopup').style.display = 'block';
+         }, 3000);
+
+        // Quiz popup button handlers
+        document.getElementById('yesButton').addEventListener('click', function() {
+            window.location.href = '/quiz/liberal';
+         });
+
+        document.getElementById('noButton').addEventListener('click', function() {
+            document.getElementById('quizPopup').style.display = 'none';
+        });
+
     </script>
 </head>
 <body>
@@ -74,5 +141,16 @@
 
     <!-- Centered Protected Image (catcher.png) -->
     <div class="protected-image"></div>
+
+        <div id="quizPopup">
+        <h3>Take "The Liberal Quiz"?</h3>
+        <button id="yesButton">Yes</button>
+        <button id="noButton">No</button>
+    </div>
+
+    <div class="quiz-container" id="quizContainer">
+        <h2 id="questionText"></h2>
+        <div id="answerButtons"></div>
+    </div>
 </body>
 </html>
