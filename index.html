@@ -176,11 +176,12 @@
             displayLastUpdateTime();
         });
 
+        // Function to display the last update time
         function displayLastUpdateTime() {
             const lastUpdatedElement = document.getElementById('lastUpdated');
-            const builtAt = '{{CF_PAGES_BUILT_AT}}'; // Cloudflare Pages will replace this with the actual value
-            if (builtAt && builtAt !== '{{CF_PAGES_BUILT_AT}}') {
-                const date = new Date(builtAt);
+            const buildTime = '{{BUILD_TIME}}';
+            if (buildTime && buildTime !== '{{BUILD_TIME}}') {
+                const date = new Date(buildTime);
                 lastUpdatedElement.textContent = `Last updated: ${date.toLocaleString()}`;
             } else {
                 lastUpdatedElement.textContent = 'Last update time unavailable';
