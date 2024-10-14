@@ -27,196 +27,51 @@
             padding: 0;
             height: 100%;
             width: 100%;
-            background-color: #000000;
+            background-color: #000000; /* Black background */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
+            overflow: hidden; /* Prevent scrolling */
         }
 
-        .video-background {
-            position: fixed;
-            right: 0;
-            bottom: 0;
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
-            z-index: -1000;
-            background: #000000;
-        }
-
-        .content {
-            position: relative;
-            z-index: 1;
-            text-align: center;
-        }
-
+        /* Style for the dynamic logo */
         .logo {
             width: 100%;
-            max-width: 748px;
+            max-width: 748px; /* Maximum width */
             height: auto;
-            margin-bottom: 20px;
-            pointer-events: none;
-            user-select: none;
+            margin-bottom: 20px; /* Space between logo and image */
+            pointer-events: none; /* Disable interaction */
+            user-select: none; /* Prevent selection */
         }
 
+        /* Style for the protected image */
         .protected-image {
             background: url('/catcher.png') no-repeat center center;
-            background-size: contain;
+            background-size: contain; /* Ensures image fits within the viewport */
             width: 100%;
             height: 100%;
-            max-height: 80%;
+            max-height: 80%; /* Prevents the image from exceeding 80% of the screen height */
             max-width: 100%;
-            pointer-events: none;
-            user-select: none;
-        }
-
-        .volume-control {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            opacity: 0.6;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .volume-control:hover {
-            opacity: 1;
-        }
-
-        .volume-slider {
-            display: none;
-            width: 100px;
-            height: 5px;
-            background-color: #888;
-            margin-right: 10px;
-        }
-
-        .volume-control:hover .volume-slider {
-            display: block;
-        }
-
-        .volume-icon {
-            width: 24px;
-            height: 24px;
-        }
-
-        .volume-icon svg {
-            width: 100%;
-            height: 100%;
-        }
-
-        #playButton {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1000;
-            padding: 10px 20px;
-            font-size: 18px;
-            background-color: rgba(255, 255, 255, 0.7);
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            display: none;
+            pointer-events: none; /* Disable interaction */
+            user-select: none; /* Prevent selection */
         }
     </style>
-</head>
-<body>
-    <video class="video-background" id="backgroundVideo" loop playsinline>
-        <source src="/background-video.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-
-    <button id="playButton">Click to Play</button>
-
-    <div class="content">
-        <img class="logo" src="" alt="Logo">
-        <div class="protected-image"></div>
-    </div>
-
-    <div class="volume-control">
-        <div class="volume-slider">
-            <input type="range" min="0" max="100" step="1">
-        </div>
-        <div class="volume-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white">
-                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03zm2.5 0c0 2.87-1.92 5.29-4.5 6.08v2.02c4-0.91 7-4.49 7-8.1 0-3.61-3-7.19-7-8.1v2.02c2.58 0.79 4.5 3.21 4.5 6.08z"/>
-            </svg>
-        </div>
-    </div>
 
     <script>
         window.onload = function() {
-            var video = document.getElementById('backgroundVideo');
-            var playButton = document.getElementById('playButton');
-            var volumeControl = document.querySelector('.volume-icon');
-            var volumeSlider = document.querySelector('.volume-slider input[type="range"]');
-
             // Randomly choose between logo.gif and logo2.gif
             var logo = document.querySelector('.logo');
             var logos = ['/logo.gif', '/logo2.gif'];
             var randomLogo = logos[Math.floor(Math.random() * logos.length)];
             logo.src = randomLogo;
-
-            // Load saved volume from localStorage
-            var savedVolume = localStorage.getItem('videoVolume');
-            if (savedVolume !== null) {
-                video.volume = parseFloat(savedVolume);
-                volumeSlider.value = video.volume * 100;
-            } else {
-                video.volume = 0.5; // Default volume
-                volumeSlider.value = 50;
-            }
-
-            // Attempt to play the video with sound
-            var playPromise = video.play();
-
-            if (playPromise !== undefined) {
-                playPromise.then(_ => {
-                    // Autoplay started successfully
-                    console.log("Autoplay started with sound");
-                }).catch(error => {
-                    // Autoplay was prevented
-                    console.log("Autoplay was prevented:", error);
-                    // Show play button
-                    playButton.style.display = 'block';
-                });
-            }
-
-            // Play button event listener
-            playButton.addEventListener('click', function() {
-                video.play();
-                playButton.style.display = 'none';
-            });
-
-            // Mute/unmute the video when the volume icon is clicked
-            volumeControl.addEventListener('click', function() {
-                var volumeIcon = volumeControl.querySelector('svg');
-                if (video.muted) {
-                    video.muted = false;
-                    volumeIcon.innerHTML = `
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white">
-                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03zm2.5 0c0 2.87-1.92 5.29-4.5 6.08v2.02c4-0.91 7-4.49 7-8.1 0-3.61-3-7.19-7-8.1v2.02c2.58 0.79 4.5 3.21 4.5 6.08z"/>
-                        </svg>`;
-                } else {
-                    video.muted = true;
-                    volumeIcon.innerHTML = `
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white">
-                            <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03zm-2.5-8v2.02C15.58 7.79 17.5 10.21 17.5 13c0 2.87-1.92 5.29-4.5 6.08v2.02c4-.91 7-4.49 7-8.1 0-3.61-3-7.19-7-8.1zM7 4l-4 4v8l4 4h5V4H7z"/>
-                        </svg>`;
-                }
-            });
-
-            // Adjust volume using the slider
-            volumeSlider.addEventListener('input', function() {
-                video.volume = volumeSlider.value / 100;
-                localStorage.setItem('videoVolume', video.volume);
-            });
-        };
     </script>
+</head>
+<body>
+    <!-- Dynamic logo with class logo -->
+    <img class="logo" src="" alt="Logo">
+
+    <!-- Centered Protected Image (catcher.png) -->
+    <div class="protected-image"></div>
 </body>
 </html>
