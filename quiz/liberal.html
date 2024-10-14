@@ -93,8 +93,8 @@
         const style = document.createElement('style');
         style.textContent = `
             .quiz-container {
-                max-width: 800px;
-                width: 90%;
+                max-width: 1000px;
+                width: 95%;
                 margin: 0 auto;
                 padding: 20px;
                 box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -118,6 +118,12 @@
                 margin: 4px 2px;
                 cursor: pointer;
                 border-radius: 5px;
+            }
+            .republican-image {
+                width: 200px;
+                height: 200px;
+                object-fit: cover;
+                margin-bottom: 20px;
             }
         `;
         document.head.appendChild(style);
@@ -202,8 +208,8 @@
         function handleFinalQuestion(answer) {
             if (answer === 'No') {
                 const quizContainer = document.querySelector('.quiz-container');
-                quizContainer.innerHTML = "<h2>Thanks for taking the test.<br>Come back when you are alone.</h2>";
-                alert("Quiz failed...");
+                quizContainer.innerHTML = "<h2>Thanks for taking the test. <br>Come back when you're alone</h2>";
+                alert("Quiz Result Failed...");
             } else {
                 fetchAndDisplayResult();
             }
@@ -213,8 +219,9 @@
             const quizContainer = document.querySelector('.quiz-container');
             quizContainer.innerHTML = `
                 <div class="result-container">
-                    <h2>YES! CONGRATS!<br> YOU ARE A REPUBLICAN!</h2>
-                    <button class="catch-libs-btn" onclick="javascript:window.location.href='https://youtu.be/Ttev-6FUcpk">Catch the libs</button>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Republicanlogo.svg/1200px-Republicanlogo.svg.png" alt="Republican Logo" class="republican-image">
+                    <h2>YES! CONGRATS! YOU ARE A REPUBLICAN!</h2>
+                    <a href="https://youtu.be/Ttev-6FUcpk" target="_blank" class="catch-libs-btn">CLICK TO CATCH THE LIBS!</a>
                 </div>
             `;
         }
@@ -247,7 +254,7 @@
                 if (data && typeof data === 'object' && 'ip' in data) {
                     quizContainer.innerHTML = `
                         <div class="result-container">
-                            <h2>I am approaching your location. <br>${data.ip}</h2>
+                            <h2>I'm approaching your location.<br>${data.ip}</h2>
                         </div>
                     `;
                 } else {
