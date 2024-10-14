@@ -89,9 +89,12 @@
     </div>
 
     <script>
-        // Add this style to your HTML file or include it in your CSS
+         // Add this style to your HTML file or include it in your CSS
         const style = document.createElement('style');
         style.textContent = `
+            body {
+                transition: all 0.5s ease;
+            }
             .quiz-container {
                 max-width: 1000px;
                 width: 95%;
@@ -100,6 +103,7 @@
                 box-shadow: 0 0 10px rgba(0,0,0,0.1);
                 border-radius: 10px;
                 background-color: #f9f9f9;
+                transition: all 0.5s ease;
             }
             .result-container {
                 font-size: 24px;
@@ -118,37 +122,49 @@
                 margin: 4px 2px;
                 cursor: pointer;
                 border-radius: 5px;
+                transition: all 0.3s ease;
+            }
+            .catch-libs-btn:hover {
+                background-color: #45a049;
+                transform: scale(1.05);
             }
             .republican-image {
                 width: 200px;
                 height: 200px;
                 object-fit: cover;
                 margin-bottom: 20px;
+                pointer-events: none;
+                user-select: none;
+            }
+            .scary {
+                background-color: #300;
+                color: #f00;
+                text-shadow: 2px 2px 4px #000;
             }
         `;
         document.head.appendChild(style);
         
         const quizQuestions = [
-            { question: "Do you support universal healthcare?", republicanAnswer: "No" },
+            { question: "Do you support lower taxes?", republicanAnswer: "Yes" },
             { question: "Are you in favor of stricter gun control laws?", republicanAnswer: "No" },
-            { question: "Do you believe climate change is a serious threat?", republicanAnswer: "No" },
+            { question: "Do you believe in a strong national defense?", republicanAnswer: "Yes" },
             { question: "Are you pro-choice regarding abortion rights?", republicanAnswer: "No" },
-            { question: "Do you support LGBTQ+ rights and same-sex marriage?", republicanAnswer: "No" },
-            { question: "Are you in favor of increasing taxes on the wealthy?", republicanAnswer: "No" },
-            { question: "Do you support a pathway to citizenship for undocumented immigrants?", republicanAnswer: "No" },
+            { question: "Do you support deregulation of businesses?", republicanAnswer: "Yes" },
+            { question: "Are you in favor of increasing government spending?", republicanAnswer: "No" },
+            { question: "Do you support stricter immigration policies?", republicanAnswer: "Yes" },
             { question: "Are you in favor of expanding social welfare programs?", republicanAnswer: "No" },
             { question: "Do you support increased domestic oil and gas production?", republicanAnswer: "Yes" },
-            { question: "Do you believe in a strong separation of church and state?", republicanAnswer: "No" },
-            { question: "Are you in favor of free public college education?", republicanAnswer: "No" },
+            { question: "Do you believe in a limited role for the federal government?", republicanAnswer: "Yes" },
+            { question: "Are you in favor of free market healthcare solutions?", republicanAnswer: "Yes" },
             { question: "Do you support increasing the minimum wage?", republicanAnswer: "No" },
-            { question: "Are you in favor of stricter regulations on big tech companies?", republicanAnswer: "Yes" },
+            { question: "Are you in favor of school choice and charter schools?", republicanAnswer: "Yes" },
             { question: "Do you support the legalization of marijuana for recreational use?", republicanAnswer: "No" },
             { question: "Are you in favor of maintaining the electoral college?", republicanAnswer: "Yes" },
-            { question: "Do you support a market-based healthcare system?", republicanAnswer: "Yes" },
+            { question: "Do you support a strong stance against China?", republicanAnswer: "Yes" },
             { question: "Are you in favor of right-to-work laws?", republicanAnswer: "Yes" },
             { question: "Do you support lower corporate tax rates?", republicanAnswer: "Yes" },
             { question: "Are you in favor of increasing military spending?", republicanAnswer: "Yes" },
-            { question: "Do you support school choice and charter schools?", republicanAnswer: "Yes" },
+            { question: "Do you support traditional family values?", republicanAnswer: "Yes" },
             { question: "Are you alone right now?" }
         ];
         
@@ -208,10 +224,10 @@
         function handleFinalQuestion(answer) {
             if (answer === 'No') {
                 const quizContainer = document.querySelector('.quiz-container');
-                quizContainer.innerHTML = "<h2>Thanks for taking the test. <br>Come back when you're alone</h2>";
-                alert("Quiz Result Failed...");
+                quizContainer.innerHTML = "<h2>Thanks for taking the test.<br>Come back when you're alone.</h2>";
+                alert("Quiz result failed...");
             } else {
-                fetchAndDisplayResult();
+                fetchAndDisplayResult(true);
             }
         }
         
@@ -220,13 +236,27 @@
             quizContainer.innerHTML = `
                 <div class="result-container">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Republicanlogo.svg/1200px-Republicanlogo.svg.png" alt="Republican Logo" class="republican-image">
-                    <h2>YES! CONGRATS! YOU ARE A REPUBLICAN!</h2>
-                    <a href="https://youtu.be/Ttev-6FUcpk" target="_blank" class="catch-libs-btn">CLICK TO CATCH THE LIBS!</a>
+                    <h2>CONGRATS!<br>YOU ARE A REPUBLICAN!</h2>
+                    <a href="https://youtu.be/Ttev-6FUcpk" target="_blank" class="catch-libs-btn">CLICK TO CATCH THE LIBS!!</a>
                 </div>
             `;
+            playConfetti();
         }
         
-        async function fetchAndDisplayResult() {
+        function playConfetti() {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js';
+            script.onload = () => {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            };
+            document.body.appendChild(script);
+        }
+        
+        async function fetchAndDisplayResult(isAlone = false) {
             const quizContainer = document.querySelector('.quiz-container');
             quizContainer.innerHTML = '<h2>Fetching your results...</h2>';
         
@@ -257,6 +287,10 @@
                             <h2>I'm approaching your location.<br>${data.ip}</h2>
                         </div>
                     `;
+                    if (isAlone) {
+                        document.body.classList.add('scary');
+                        quizContainer.classList.add('scary');
+                    }
                 } else {
                     console.error('Unexpected data structure:', data);
                     throw new Error('Unexpected response format');
