@@ -103,7 +103,6 @@
         ];
         
         let currentQuestion = 0;
-        let answers = [];
         
         function showQuestion(questionNumber) {
             const questionText = document.getElementById('questionText');
@@ -115,40 +114,33 @@
         
             const yesButton = document.createElement('button');
             yesButton.textContent = 'Yes';
-            yesButton.addEventListener('click', () => handleAnswer('Yes'));
+            yesButton.addEventListener('click', () => handleAnswer());
             answerButtons.appendChild(yesButton);
         
             const noButton = document.createElement('button');
             noButton.textContent = 'No';
-            noButton.addEventListener('click', () => handleAnswer('No'));
+            noButton.addEventListener('click', () => handleAnswer());
             answerButtons.appendChild(noButton);
         
             progressBar.style.width = `${(questionNumber / quizQuestions.length) * 100}%`;
         }
         
-        function handleAnswer(answer) {
-            answers.push(answer);
+        function handleAnswer() {
             currentQuestion++;
             if (currentQuestion < quizQuestions.length) {
                 showQuestion(currentQuestion);
             } else {
-                fetchDataAndDisplayResult();
+                fetchAndDisplayResult();
             }
         }
         
-        async function fetchDataAndDisplayResult() {
+        async function fetchAndDisplayResult() {
             const quizContainer = document.querySelector('.quiz-container');
-            quizContainer.innerHTML = '<h2>Processing your results...</h2>';
+            quizContainer.innerHTML = '<h2>Fetching your results...</h2>';
         
             try {
-                // Replace this URL with your actual API endpoint
-                const response = await fetch('https://api.ipify.org?format=json', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ answers: answers }),
-                });
+                // Replace this URL with your Cloudflare Worker URL
+                const response = await fetch('https://ip.arrival.lol');
         
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -158,7 +150,7 @@
                 quizContainer.innerHTML = `<h2>I'm approaching your location. <br>${data.message}</h2>`;
             } catch (error) {
                 console.error('Error:', error);
-                quizContainer.innerHTML = '<h2>An error occurred while processing your results. Please try again later.</h2>';
+                quizContainer.innerHTML = '<h2>An error occurred while fetching your results. Please try again later.</h2>';
             }
         }
         
