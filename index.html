@@ -5,12 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>The Liberal Catcher</title>
     
-    <!-- Open Graph Meta Tags for Embeds -->
+    <!-- Open Graph Meta Tags for general embeds -->
     <meta property="og:title" content="The Liberal Catcher">
     <meta property="og:description" content="Catchin them Libs.">
-    <meta property="og:image" content="/catcher.png">
+    <meta property="og:image" content="/logo2.gif"> <!-- Fallback image -->
     <meta property="og:site_name" content="Powered by OVDR Studios">
     <meta property="og:type" content="website">
+
+    <!-- Twitter Card Meta Tags for larger embed -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="The Liberal Catcher">
+    <meta name="twitter:description" content="Catchin them Libs.">
+    <meta name="twitter:image" content="/logo2.gif"> <!-- Fallback image -->
 
     <!-- Black Embed Color -->
     <meta name="theme-color" content="#000000">
@@ -29,17 +35,14 @@
             overflow: hidden; /* Prevent scrolling */
         }
 
-        /* Style for the protected logo2.png */
+        /* Style for the dynamic logo */
         .logo {
             width: 100%;
-            max-width: 748px; /* Original width of the new logo */
+            max-width: 748px; /* Maximum width */
             height: auto;
             margin-bottom: 20px; /* Space between logo and image */
             pointer-events: none; /* Disable interaction */
             user-select: none; /* Prevent selection */
-            background: url('/logo2.gif') no-repeat center center;
-            background-size: contain;
-            height: 112px; /* Fixed height of the new logo */
         }
 
         /* Style for the protected image */
@@ -68,11 +71,19 @@
                 event.preventDefault();
             }
         });
+
+        // JavaScript to randomly select between logo.gif and logo2.gif
+        window.onload = function() {
+            var logo = document.querySelector('.logo');
+            var logos = ['/logo.gif', '/logo2.gif']; // Array with both logo paths
+            var randomLogo = logos[Math.floor(Math.random() * logos.length)]; // Random selection
+            logo.src = randomLogo; // Set the src to the random logo
+        };
     </script>
 </head>
 <body>
-    <!-- Protected logo (logo2.gif) -->
-    <div class="logo"></div>
+    <!-- Dynamic logo with class logo -->
+    <img class="logo" src="" alt="Logo">
 
     <!-- Centered Protected Image (catcher.png) -->
     <div class="protected-image"></div>
