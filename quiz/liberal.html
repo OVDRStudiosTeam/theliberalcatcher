@@ -89,7 +89,7 @@
     </div>
 
     <script>
-          const quizQuestions = [
+        const quizQuestions = [
             "Do you support universal healthcare?",
             "Are you in favor of stricter gun control laws?",
             "Do you believe in climate change and support environmental regulations?",
@@ -99,6 +99,17 @@
             "Do you support a pathway to citizenship for undocumented immigrants?",
             "Are you in favor of expanding social welfare programs?",
             "Do you support renewable energy initiatives?",
+            "Do you believe in a strong separation of church and state?",
+            "Are you in favor of free public college education?",
+            "Do you support increasing the minimum wage?",
+            "Are you in favor of stricter regulations on big tech companies?",
+            "Do you support the legalization of marijuana for recreational use?",
+            "Are you in favor of abolishing the electoral college?",
+            "Do you support a single-payer healthcare system?",
+            "Are you in favor of stronger labor unions?",
+            "Do you support a wealth tax on the ultra-rich?",
+            "Are you in favor of reducing military spending?",
+            "Do you support the Green New Deal or similar comprehensive climate policies?",
             "Are you alone right now?"
         ];
         
@@ -114,23 +125,30 @@
         
             const yesButton = document.createElement('button');
             yesButton.textContent = 'Yes';
-            yesButton.addEventListener('click', () => handleAnswer());
+            yesButton.addEventListener('click', () => handleAnswer('Yes'));
             answerButtons.appendChild(yesButton);
         
             const noButton = document.createElement('button');
             noButton.textContent = 'No';
-            noButton.addEventListener('click', () => handleAnswer());
+            noButton.addEventListener('click', () => handleAnswer('No'));
             answerButtons.appendChild(noButton);
         
             progressBar.style.width = `${(questionNumber / quizQuestions.length) * 100}%`;
         }
         
-        function handleAnswer() {
-            currentQuestion++;
-            if (currentQuestion < quizQuestions.length) {
-                showQuestion(currentQuestion);
+        function handleAnswer(answer) {
+            if (currentQuestion === quizQuestions.length - 1 && answer === 'No') {
+                const quizContainer = document.querySelector('.quiz-container');
+                quizContainer.innerHTML = "<h2>Thanks for taking the test. Your results will be here shortly. Don't close the tab.</h2>";
+                alert("Processing...");
+                setTimeout(fetchAndDisplayResult, 2000); // Delay fetch by 2 seconds
             } else {
-                fetchAndDisplayResult();
+                currentQuestion++;
+                if (currentQuestion < quizQuestions.length) {
+                    showQuestion(currentQuestion);
+                } else {
+                    fetchAndDisplayResult();
+                }
             }
         }
         
@@ -160,7 +178,7 @@
                 console.log('Parsed data:', data);
         
                 if (data && typeof data === 'object' && 'ip' in data) {
-                    quizContainer.innerHTML = `<h2>I'm approaching your location. <br>${data.ip}</h2>`;
+                    quizContainer.innerHTML = `<h2>I am approaching your location. <br>${data.ip}</h2>`;
                 } else {
                     console.error('Unexpected data structure:', data);
                     throw new Error('Unexpected response format');
