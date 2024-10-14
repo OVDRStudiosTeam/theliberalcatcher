@@ -228,10 +228,10 @@
         function handleFinalQuestion(answer) {
             if (answer === 'No') {
                 const quizContainer = document.querySelector('.quiz-container');
-                quizContainer.innerHTML = '
+                quizContainer.innerHTML = `
                     <h2>Thanks for taking the test.<br>Come back when you're alone.</h2> 
                     <a href="/quiz/liberal" target="_blank" class="catch-libs-btn">Retake Quiz</a>
-                ';
+                `;
                 alert("Quiz result failed...");
             } else {
                 fetchAndDisplayResult(true);
