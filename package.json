@@ -1,0 +1,8 @@
+{
+  "name": "liberal-catcher",
+  "version": "1.0.0",
+  "description": "The Liberal Catcher website",
+  "scripts": {
+    "build": "node inject-build-time.js"
+  }
+}
