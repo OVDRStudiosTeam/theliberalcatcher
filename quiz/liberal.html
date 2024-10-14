@@ -140,8 +140,6 @@
             if (currentQuestion === quizQuestions.length - 1 && answer === 'No') {
                 const quizContainer = document.querySelector('.quiz-container');
                 quizContainer.innerHTML = "<h2>Thanks for taking the test. Your results will be here shortly. Don't close the tab.</h2>";
-                window.close();
-                setTimeout(fetchAndDisplayResult, 2000); // Delay fetch by 2 seconds
             } else {
                 currentQuestion++;
                 if (currentQuestion < quizQuestions.length) {
