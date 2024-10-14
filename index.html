@@ -29,12 +29,17 @@
             overflow: hidden; /* Prevent scrolling */
         }
 
-        /* Style for the logo gif */
+        /* Style for the protected logo2.png */
         .logo {
             width: 100%;
-            max-width: 887px; /* Original width of the GIF */
+            max-width: 748px; /* Original width of the new logo */
             height: auto;
             margin-bottom: 20px; /* Space between logo and image */
+            pointer-events: none; /* Disable interaction */
+            user-select: none; /* Prevent selection */
+            background: url('/logo2.gif') no-repeat center center;
+            background-size: contain;
+            height: 112px; /* Fixed height of the new logo */
         }
 
         /* Style for the protected image */
@@ -45,12 +50,8 @@
             height: 100%;
             max-height: 80%; /* Prevents the image from exceeding 80% of the screen height */
             max-width: 100%;
-        }
-
-        /* Disable right-click on the image */
-        .protected-image img {
-            pointer-events: none;
-            user-select: none;
+            pointer-events: none; /* Disable interaction */
+            user-select: none; /* Prevent selection */
         }
     </style>
 
@@ -70,10 +71,10 @@
     </script>
 </head>
 <body>
-    <!-- Logo GIF -->
-    <img src="/logo.gif" alt="Logo" class="logo">
+    <!-- Protected logo (logo2.gif) -->
+    <div class="logo"></div>
 
-    <!-- Centered Protected Image -->
+    <!-- Centered Protected Image (catcher.png) -->
     <div class="protected-image"></div>
 </body>
 </html>
