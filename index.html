@@ -8,7 +8,7 @@
     <!-- Open Graph Meta Tags for general embeds -->
     <meta property="og:title" content="The Liberal Catcher">
     <meta property="og:description" content="Catchin them Libs.">
-    <meta property="og:image" content="/logo2.gif"> <!-- Fallback image -->
+    <meta property="og:image" content="/logo2.gif">
     <meta property="og:site_name" content="Powered by OVDR Studios">
     <meta property="og:type" content="website">
 
@@ -16,7 +16,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="The Liberal Catcher">
     <meta name="twitter:description" content="Catchin them Libs.">
-    <meta name="twitter:image" content="/logo2.gif"> <!-- Fallback image -->
+    <meta name="twitter:image" content="/logo2.gif">
 
     <!-- Black Embed Color -->
     <meta name="theme-color" content="#000000">
@@ -56,28 +56,88 @@
             pointer-events: none; /* Disable interaction */
             user-select: none; /* Prevent selection */
         }
+
+        /* Volume control styles */
+        .volume-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            opacity: 0.6; /* Slightly transparent */
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .volume-control:hover {
+            opacity: 1;
+        }
+
+        .volume-slider {
+            display: none;
+            width: 100px;
+            height: 5px;
+            background-color: #888;
+            margin-right: 10px;
+        }
+
+        .volume-control:hover .volume-slider {
+            display: block;
+        }
+
+        .volume-slider input[type="range"] {
+            width: 100%;
+        }
+
+        .volume-icon {
+            width: 24px;
+            height: 24px;
+            background-image: url('/volume-icon.png'); /* Add your mute/unmute icon here */
+            background-size: cover;
+        }
     </style>
 
-    <!-- JavaScript for disabling right-click and zoom -->
     <script>
-        // Disable right-click
-        document.addEventListener('contextmenu', function(event) {
-            event.preventDefault();
-        });
-
-        // Disable zooming on desktop
-        document.addEventListener('keydown', function(event) {
-            if (event.ctrlKey && (event.key === '+' || event.key === '-' || event.key === '0')) {
-                event.preventDefault();
-            }
-        });
-
-        // JavaScript to randomly select between logo.gif and logo2.gif
         window.onload = function() {
+            // Randomly choose between logo.gif and logo2.gif
             var logo = document.querySelector('.logo');
-            var logos = ['/logo.gif', '/logo2.gif']; // Array with both logo paths
-            var randomLogo = logos[Math.floor(Math.random() * logos.length)]; // Random selection
-            logo.src = randomLogo; // Set the src to the random logo
+            var logos = ['/logo.gif', '/logo2.gif'];
+            var randomLogo = logos[Math.floor(Math.random() * logos.length)];
+            logo.src = randomLogo;
+
+            // Audio setup
+            var audio = new Audio('/thelibscatchertheme.mp3');
+            var volumeControl = document.querySelector('.volume-icon');
+            var volumeSlider = document.querySelector('.volume-slider input[type="range"]');
+
+            // Load saved volume from localStorage
+            var savedVolume = localStorage.getItem('audioVolume');
+            if (savedVolume !== null) {
+                audio.volume = savedVolume;
+                volumeSlider.value = savedVolume * 100;
+            } else {
+                audio.volume = 0.5; // Default volume
+                volumeSlider.value = 50;
+            }
+
+            // Play the audio when the page loads
+            audio.play();
+
+            // Mute/unmute the audio when the volume icon is clicked
+            volumeControl.addEventListener('click', function() {
+                if (audio.muted) {
+                    audio.muted = false;
+                    volumeControl.style.backgroundImage = "url('/volume-icon.png')"; // Replace with unmuted icon
+                } else {
+                    audio.muted = true;
+                    volumeControl.style.backgroundImage = "url('/mute-icon.png')"; // Replace with muted icon
+                }
+            });
+
+            // Adjust volume using the slider
+            volumeSlider.addEventListener('input', function() {
+                audio.volume = volumeSlider.value / 100;
+                localStorage.setItem('audioVolume', audio.volume); // Save volume to localStorage
+            });
         };
     </script>
 </head>
@@ -87,5 +147,13 @@
 
     <!-- Centered Protected Image (catcher.png) -->
     <div class="protected-image"></div>
+
+    <!-- Volume control UI -->
+    <div class="volume-control">
+        <div class="volume-slider">
+            <input type="range" min="0" max="100" step="1">
+        </div>
+        <div class="volume-icon"></div>
+    </div>
 </body>
 </html>
