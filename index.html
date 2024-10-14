@@ -136,18 +136,29 @@
             logo.src = randomLogo;
         }
 
-        // Show quiz popup after 3 seconds
-          setTimeout(function() {
+        // Function to show the quiz popup
+        function showQuizPopup() {
             document.getElementById('quizPopup').style.display = 'block';
-         }, 3000);
+        }
 
-        // Quiz popup button handlers
-        document.getElementById('yesButton').addEventListener('click', function() {
-            window.location.href = '/quiz/liberal';
-         });
-
-        document.getElementById('noButton').addEventListener('click', function() {
+        // Function to hide the quiz popup
+        function hideQuizPopup() {
             document.getElementById('quizPopup').style.display = 'none';
+        }
+
+        // Function to redirect to the quiz page
+        function goToQuiz() {
+            window.location.href = '/quiz/liberal.html';
+        }
+
+        // Wait for the DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show quiz popup after 3 seconds
+            setTimeout(showQuizPopup, 3000);
+
+            // Attach event listeners to buttons
+            document.getElementById('yesButton').addEventListener('click', goToQuiz);
+            document.getElementById('noButton').addEventListener('click', hideQuizPopup);
         });
 
     </script>
