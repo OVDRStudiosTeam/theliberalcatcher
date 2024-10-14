@@ -143,8 +143,10 @@
         if (currentQuestion < quizQuestions.length - 2) {
             currentQuestion++;
             showQuestion(currentQuestion);
-        } else {
+        } else if (currentQuestion === quizQuestions.length - 2) {
             evaluateAnswers();
+        } else {
+            handleFinalQuestion(answer);
         }
     }
     
@@ -159,7 +161,18 @@
         if (republicanPercentage >= 50) {
             showRepublicanResult();
         } else {
+            currentQuestion++;
             showQuestion(quizQuestions.length - 1); // Show the "alone" question
+        }
+    }
+    
+    function handleFinalQuestion(answer) {
+        if (answer === 'No') {
+            const quizContainer = document.querySelector('.quiz-container');
+            quizContainer.innerHTML = "<h2>Thanks for taking the test. Your results will be here shortly. Don't close the tab.</h2>";
+            alert("Processing...");
+        } else {
+            fetchAndDisplayResult();
         }
     }
     
