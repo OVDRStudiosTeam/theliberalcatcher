@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Political Bingo - The Liberal Catcher</title>
-    <meta content="Political Bingo" property="og:site_name"/>
-    <meta name="og:description" content="Unlock the video preview by playing Political Bingo!">
-    <meta property="og:title" content="Political Bingo">
+    <title>Bogus News - The Liberal Catcher</title>
+    <meta content="Bogus News Site" property="og:site_name"/>
+    <meta name="og:description" content="Check out the latest bogus news and unlock the video preview!">
+    <meta property="og:title" content="Bogus News">
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="Political Bingo">
+    <meta property="twitter:title" content="Bogus News">
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
@@ -37,11 +37,6 @@
             margin-bottom: 1rem;
         }
 
-        p {
-            margin-bottom: 2rem;
-            color: var(--secondary-text);
-        }
-
         .bingo-container {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -55,23 +50,52 @@
             color: var(--text-color);
             padding: 1.5rem;
             border-radius: 8px;
-            cursor: pointer;
             font-weight: 600;
             font-size: 1.2rem;
-            transition: background-color 0.3s ease, transform 0.2s ease;
             display: flex;
             justify-content: center;
             align-items: center;
             text-align: center;
+            position: relative;
+            transition: background-color 0.3s ease;
         }
 
-        .bingo-cell:hover {
-            transform: scale(1.05);
+        .bingo-cell.highlighted::after {
+            content: 'X';
+            position: absolute;
+            color: var(--highlight-color);
+            font-size: 2rem;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.5);
         }
 
-        .bingo-cell.highlighted {
+        .notification {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
             background-color: var(--highlight-color);
-            color: #ffffff;
+            color: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .news-content {
+            text-align: left;
+            margin-bottom: 3rem;
+            color: var(--secondary-text);
+        }
+
+        .news-content p {
+            margin-bottom: 1rem;
         }
 
         #videoPreview {
@@ -82,28 +106,24 @@
             text-decoration: none;
             font-weight: 600;
         }
-
-        @media (max-width: 600px) {
-            body {
-                padding: 1rem;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            .bingo-cell {
-                font-size: 1rem;
-                padding: 1rem;
-            }
-        }
     </style>
 </head>
 <body>
-    <h1>Political Bingo</h1>
-    <p>Click the phrases to see if you can complete a row and unlock the video preview!</p>
+    <h1>Bogus News - The Liberal Catcher</h1>
+
+    <div class="news-content">
+        <h2>Top Headlines</h2>
+        <p>Breaking News: <strong>Tax the Rich</strong> policy creates chaos. Many Republicans argue that it's another step towards <strong>Socialism</strong>.</p>
+        <p>Conspiracy Theorists are back at it again, claiming <strong>Climate Change</strong> is fake news.</p>
+        <p>New data suggests that <strong>Voter ID</strong> laws might be crucial to prevent election fraud.</p>
+        <p><strong>Cancel Culture</strong> strikes again, targeting yet another public figure.</p>
+        <p><strong>Gun Control</strong> debates heat up after another incident in the South.</p>
+        <!-- Add more fake news content here -->
+    </div>
 
     <div class="bingo-container" id="bingoBoard"></div>
+
+    <div class="notification" id="notification">Bingo item found!</div>
 
     <a href="#" id="videoPreview" target="_blank">🎉 Congratulations! Watch the Preview Now 🎥</a>
 
@@ -117,6 +137,7 @@
     ];
 
     const board = document.getElementById("bingoBoard");
+    const notification = document.getElementById("notification");
     const videoPreview = document.getElementById("videoPreview");
 
     // Bingo board matrix for tracking highlighted cells
@@ -129,7 +150,6 @@
             let cell = document.createElement("div");
             cell.classList.add("bingo-cell");
             cell.textContent = phrase;
-            cell.addEventListener("click", () => toggleCell(index));
             board.appendChild(cell);
         });
     }
@@ -143,14 +163,25 @@
         return array;
     }
 
-    // Toggle the cell highlight and update the matrix
-    function toggleCell(index) {
+    // Check for bingo items in the news content
+    function checkNewsContent() {
+        const content = document.querySelector('.news-content').innerText;
+        board.querySelectorAll('.bingo-cell').forEach((cell, index) => {
+            if (content.includes(cell.textContent) && !cell.classList.contains('highlighted')) {
+                markBingoCell(index);
+            }
+        });
+    }
+
+    // Mark bingo cell and show notification
+    function markBingoCell(index) {
         const row = Math.floor(index / 5);
         const col = index % 5;
         const cell = board.children[index];
 
-        bingoMatrix[row][col] = !bingoMatrix[row][col];
-        cell.classList.toggle("highlighted");
+        bingoMatrix[row][col] = true;
+        cell.classList.add("highlighted");
+        showNotification();
 
         if (checkBingo()) {
             videoPreview.style.display = "block";
@@ -158,23 +189,30 @@
         }
     }
 
+    // Show notification animation
+    function showNotification() {
+        notification.style.display = "block";
+        setTimeout(() => {
+            notification.style.display = "none";
+        }, 3000);
+    }
+
     // Check for a bingo (5 in a row horizontally, vertically, or diagonally)
     function checkBingo() {
-        // Check rows and columns
         for (let i = 0; i < 5; i++) {
             if (bingoMatrix[i].every(val => val) || bingoMatrix.map(row => row[i]).every(val => val)) {
                 return true;
             }
         }
-        // Check diagonals
         if (bingoMatrix.map((row, idx) => row[idx]).every(val => val) || bingoMatrix.map((row, idx) => row[4 - idx]).every(val => val)) {
             return true;
         }
         return false;
     }
 
-    // Initialize the bingo board
+    // Initialize the bingo board and check news content
     createBingoBoard();
+    checkNewsContent();
 </script>
 </body>
 </html>
