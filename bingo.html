@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Political Bingo - The Liberal Catcher</title>
+    <meta content="Political Bingo" property="og:site_name"/>
+    <meta name="og:description" content="Unlock the video preview by playing Political Bingo!">
+    <meta property="og:title" content="Political Bingo">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Political Bingo">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+        :root {
+            --bg-color: #1a1a1a;
+            --card-bg: #282828;
+            --text-color: #f0f0f0;
+            --accent-color: #ff4081;
+            --highlight-color: #4caf50;
+            --secondary-text: #b0b0b0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--accent-color);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            margin-bottom: 2rem;
+            color: var(--secondary-text);
+        }
+
+        .bingo-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .bingo-cell {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.2rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .bingo-cell:hover {
+            transform: scale(1.05);
+        }
+
+        .bingo-cell.highlighted {
+            background-color: var(--highlight-color);
+            color: #ffffff;
+        }
+
+        #videoPreview {
+            display: none;
+            margin-top: 2rem;
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .bingo-cell {
+                font-size: 1rem;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Political Bingo</h1>
+    <p>Click the phrases to see if you can complete a row and unlock the video preview!</p>
+
+    <div class="bingo-container" id="bingoBoard"></div>
+
+    <a href="#" id="videoPreview" target="_blank">🎉 Congratulations! Watch the Preview Now 🎥</a>
+
+<script>
+    const phrases = [
+        "Fake News", "Tax the Rich", "Climate Change", "Free Healthcare", "Government Shutdown",
+        "Conspiracy Theory", "Election Fraud", "Cancel Culture", "Gun Control", "Socialism",
+        "Deep State", "Voter ID", "Political Correctness", "Wealth Inequality", "Big Government",
+        "Defund the Police", "Antifa", "Critical Race Theory", "Filibuster", "Liberal Agenda",
+        "Woke Culture", "Elitist Media", "Universal Basic Income", "Corporate Greed", "Border Wall"
+    ];
+
+    const board = document.getElementById("bingoBoard");
+    const videoPreview = document.getElementById("videoPreview");
+
+    // Bingo board matrix for tracking highlighted cells
+    let bingoMatrix = Array(5).fill().map(() => Array(5).fill(false));
+
+    // Create the bingo board
+    function createBingoBoard() {
+        let shuffledPhrases = shuffle(phrases).slice(0, 25);
+        shuffledPhrases.forEach((phrase, index) => {
+            let cell = document.createElement("div");
+            cell.classList.add("bingo-cell");
+            cell.textContent = phrase;
+            cell.addEventListener("click", () => toggleCell(index));
+            board.appendChild(cell);
+        });
+    }
+
+    // Shuffle phrases to randomize the bingo board
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    // Toggle the cell highlight and update the matrix
+    function toggleCell(index) {
+        const row = Math.floor(index / 5);
+        const col = index % 5;
+        const cell = board.children[index];
+
+        bingoMatrix[row][col] = !bingoMatrix[row][col];
+        cell.classList.toggle("highlighted");
+
+        if (checkBingo()) {
+            videoPreview.style.display = "block";
+            videoPreview.href = "https://www.example.com/preview"; // Your video preview link here
+        }
+    }
+
+    // Check for a bingo (5 in a row horizontally, vertically, or diagonally)
+    function checkBingo() {
+        // Check rows and columns
+        for (let i = 0; i < 5; i++) {
+            if (bingoMatrix[i].every(val => val) || bingoMatrix.map(row => row[i]).every(val => val)) {
+                return true;
+            }
+        }
+        // Check diagonals
+        if (bingoMatrix.map((row, idx) => row[idx]).every(val => val) || bingoMatrix.map((row, idx) => row[4 - idx]).every(val => val)) {
+            return true;
+        }
+        return false;
+    }
+
+    // Initialize the bingo board
+    createBingoBoard();
+</script>
+</body>
+</html>
